@@ -1,0 +1,24 @@
+{
+    "token": {
+        "borderRadius": 1
+    },
+    "components": {
+        "Layout": {
+            "headerBg": "#fb8b24",
+            "bodyBg": "#ffffff",
+            "headerHeight": 90,
+            "headerPadding": "0px 60px 0px 60px",
+            "headerWidth": 100
+        },
+        "Menu": {
+            "activeBarBorderWidth": 0,
+            "itemHeight": 30,
+            "itemBg": "#9a031e",
+            "colorText": "#ffffff",
+            "itemSelectedBg": "#ffffff"
+        },
+        "Form": {
+            "itemMarginBottom": 15
+        }         
+    }
+}
