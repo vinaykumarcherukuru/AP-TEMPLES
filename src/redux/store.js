@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import { thunk } from 'redux-thunk'; // Import `thunk` as a named import
+import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from './reducers/index';
