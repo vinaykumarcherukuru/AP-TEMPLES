@@ -12,5 +12,15 @@ code {
     monospace;
 }
 
+/* Hide the end date input */
+.ant-picker-input:nth-child(3) {
+  display: none;
+}
+
+/* Hide the separator (dash) between the start and end date */
+.ant-picker-range-separator {
+  display: none;
+}
+
 @import url("./styles/table.css");
 @import url("./styles/NotFound.css");

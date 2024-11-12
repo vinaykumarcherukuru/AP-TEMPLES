@@ -1,14 +1,20 @@
-import React, { useState } from 'react'
-import { Form, Select, Button, Typography, Row, Col, Flex, Input } from 'antd';
+import React, { useRef, useState } from 'react'
+import { Form, Select, Button, Typography, Row, Col, Flex, Input, Radio, DatePicker, notification } from 'antd';
 import moment from 'moment';
 import TwoMonthsDatePicker from '../components/TwoMonthsDatePicker';
 import VipDetails from '../components/VipDetails';
+import BookingDetails from '../redux/actions/bookingActions';
+import { useDispatch } from 'react-redux';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 const OnlineBooking = () => {
-  const [type, setType] = useState('DA');
+  const [vipDetails, setVIPDetails] = useState([]);
+  const [isreset, setIsreset] = useState(false);
+  const [form] = Form.useForm();
+  const dispatch = new useDispatch();
+
   const temples = [
     {
       name: 'Kanipakam',
@@ -73,27 +79,80 @@ const OnlineBooking = () => {
     return current && (current.day() === 6 || current.day() === 0);
   };
 
+  const handleSubmit = () => {
+    form.submit();
+  };
+
+  const onFinish = (data) => {
+    data.darshanmDate = data.darshanamDate.format('DD/MM/YYYY');
+    data.Members = vipDetails;
+
+    dispatch(BookingDetails.AddDetails(data)).then(() => {
+      notification.success({
+        message: 'Success',
+        description: 'Data Submitted Successfully.',
+        style: {
+          backgroundColor: '#F6FFED', // Green background (Ant Design success color)
+          color: '#fff', // White text
+        },
+      })
+      form.resetFields();
+      setIsreset(!isreset);
+    }
+    );
+  }
+
+  const disabledDate = (current) => {
+    // Disable weekends (Saturday and Sunday)
+    const isWeekend = current.day() === 0 || current.day() === 6; // 0 is Sunday, 6 is Saturday
+
+    // Only allow November and December 2024, and disable weekends
+    const allowedMonths = ['2024-11', '2024-12']; // Only allow Nov and Dec 2024
+    const isDisabledMonth = !allowedMonths.includes(current.format('YYYY-MM')); // Disable non-allowed months
+
+    return isWeekend || isDisabledMonth; // Disable weekends and non-allowed months
+  };
+
+  const dateRender = (current) => {
+    // Change the color of weekends to red
+    const isWeekend = current.day() === 0 || current.day() === 6;
+    if (isWeekend) {
+      return (
+        <div style={{ color: 'red' }}>
+          {current.date()}
+        </div>
+      );
+    }
+    return current.date(); // Return normal date for weekdays
+  };
   return (
     <>
       <Flex justify='space-between' align='center'>
         <Title level={4}>Darshanam Booking</Title>
-        <Button style={{ backgroundColor: 'rgb(206, 85, 36)', color: '#ffffff', border: 'none' }}>Submit</Button>
+        <Button style={{ backgroundColor: 'rgb(206, 85, 36)', color: '#ffffff', border: 'none' }} onClick={handleSubmit}>Submit</Button>
       </Flex>
       <br />
 
       <Form
         name="form_booking"
         layout='vertical'
-      //style={{ width: '30%' }}
-      // labelCol={{
-      //   span: 2,
-      // }}
-      // wrapperCol={{
-      //   span: 24,
-      // }}
+        form={form}
+        onFinish={onFinish}
+        //style={{ width: '30%' }}
+        // labelCol={{
+        //   span: 2,
+        // }}
+        // wrapperCol={{
+        //   span: 24,
+        // }}
+        initialValues={{ accommodation: 'Y' }}
       >
         <Flex gap={20} align='center' wrap>
-          <Form.Item label='Select Temple'>
+          <Form.Item
+            label='Select Temple'
+            name='temple'
+            rules={[{ required: true, message: 'Please select temple!' }]}
+          >
             <Select placeholder="Select a temple" style={{ width: 300 }}>
               {temples.map((temple, index) => (
                 <Option key={index} value={temple.name}>
@@ -101,7 +160,7 @@ const OnlineBooking = () => {
                     <img
                       src={temple.image}
                       alt={temple.name}
-                      style={{ width: 40, height: 40, marginRight: 10 }}
+                      style={{ width: 25, height: 25, marginRight: 10 }}
                     />
                     {temple.name} - {temple.location}
                   </div>
@@ -110,48 +169,27 @@ const OnlineBooking = () => {
             </Select>
           </Form.Item>
 
-          <Form.Item
-            label="Seva Type"
-            name="sevaType"
-            rules={[{ required: true, message: 'Please make a selection!' }]}
-          >
-            <Select placeholder="Seva Type" style={{ width: 300 }} onChange={(val) => setType(val)} defaultValue={'DA'}>
-              <Option value='D'>Darshanam</Option>
-              <Option value='A'>Accomidation</Option>
-              <Option value='DA'>Darshanam & Accomidation</Option>
-            </Select>
+          <Form.Item name="darshanamDate" label="Darshan Date" rules={[{ required: true, message: 'Please select Date!' }]}>
+            <DatePicker
+              format="DD/MM/YYYY"
+              disabledDate={disabledDate}
+              dateRender={dateRender}
+            />
+
           </Form.Item>
 
-          {(type === 'D' || type === 'DA') &&
-            <Form.Item label="Darshanam Date">
-              <TwoMonthsDatePicker />
-            </Form.Item>
-          }
-
-          {(type === 'A' || type === 'DA') &&
-            <Form.Item label="Accomidation Date">
-              <TwoMonthsDatePicker />
-            </Form.Item>
-          }
+          <Form.Item name='accommodation' label="Accommodation" rules={[{ required: true, message: 'Please select Accommodation!' }]}>
+            <Select placeholder="Select a Accommodation">
+              <Option value="Y">Yes</Option>
+              <Option value="N">No</Option>
+            </Select>
+          </Form.Item>
         </Flex>
-
-        <Form.Item
-          label="Mobile Number"
-          name="mobile"
-          rules={[{ required: true, message: 'Please make a selection!' }]}
-        >
-          <Input style={{ width: 300 }} />
-        </Form.Item>
-        {/* <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item> */}
       </Form>
 
-      <Title level={4}>Details for VIP Darshanam</Title> <br />
+      {/* <Title level={4}>Details for VIP Darshanam</Title> <br /> */}<br /><br />
 
-      <VipDetails />
+      <VipDetails setVIPDetails={setVIPDetails} isreset={isreset} />
     </>
   )
 }

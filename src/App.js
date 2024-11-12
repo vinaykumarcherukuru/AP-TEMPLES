@@ -121,10 +121,10 @@ function App() {
             {isAuthenticated &&
             <Menu mode="horizontal" defaultSelectedKeys={['1']} style={{ paddingLeft: 40 }}>
               <Menu.Item key="1"><Link to="/">Temples</Link></Menu.Item>
-              <Menu.Item key="2"><Link to="/onlinebooking">Sevas & Darshanam</Link></Menu.Item>
+              <Menu.Item key="2"><Link to="/onlinebooking">VIP Darshanam</Link></Menu.Item>
               <Menu.Item key="3"><Link to="/history">Booking History</Link></Menu.Item>
-              <Menu.Item key="4"><Link to="/services">Services</Link></Menu.Item>
-              <Menu.Item key="5"><Link to="/contact">Contact</Link></Menu.Item>
+              {/* <Menu.Item key="4"><Link to="/services">Services</Link></Menu.Item>
+              <Menu.Item key="5"><Link to="/contact">Contact</Link></Menu.Item> */}
             </Menu>
 }
           </div>

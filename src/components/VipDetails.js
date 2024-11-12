@@ -1,33 +1,46 @@
-import React, { useState } from 'react';
-import { Table, Button, Input } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Table, Button, Input, Radio } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
-const VipDetails = () => {
-    const [dataSource, setDataSource] = useState([
-        {
-            key: '1',
-            name: 'John Doe',
-            age: 32,
-            aadharNumber: '10 Downing Street',
-        },
-    ]);
-    const [count, setCount] = useState(2);
+const VipDetails = ({ setVIPDetails, isreset }) => {
+    const [dataSource, setDataSource] = useState([]);
+
+    useEffect(() => {
+        setVIPDetails(dataSource);
+    }, [dataSource])
+
+    useEffect(() => {
+        setDataSource([]);
+    }, [isreset])
+
 
     const addNewRow = () => {
+        let randomInt = Math.floor(Math.random() * 100) + 1;
+
         const newRow = {
-            key: count.toString(),
+            key: randomInt,
             name: '',
             age: '',
             aadharNumber: '',
+            gender: 'M',
+            mobileNumber: ''
         };
         setDataSource([...dataSource, newRow]);
-        setCount(count + 1);
     };
 
     const handleDelete = (key) => {
-        alert(key)
-        setDataSource(dataSource.filter(x=>x.key !== key))
+        setDataSource(dataSource.filter(x => x.key !== key))
     }
+
+    const handleInputChange = (key, field, value) => {
+        const updatedData = dataSource.map((item) => {
+            if (item.key === key) {
+                return { ...item, [field]: value };
+            }
+            return item;
+        });
+        setDataSource(updatedData);
+    };
 
     const columns = [
         {
@@ -37,8 +50,7 @@ const VipDetails = () => {
             render: (text, record) => (
                 <Input
                     value={text}
-                //   onChange={(e) => handleChange(e.target.value, record.key, 'name')}
-
+                    onChange={(e) => handleInputChange(record.key, 'name', e.target.value)}
                 />
             )
         },
@@ -49,8 +61,7 @@ const VipDetails = () => {
             render: (text, record) => (
                 <Input
                     value={text}
-                // onChange={(e) => handleChange(e.target.value, record.key, 'name')}
-
+                    onChange={(e) => handleInputChange(record.key, 'age', e.target.value)}
                 />
             )
         },
@@ -61,16 +72,39 @@ const VipDetails = () => {
             render: (text, record) => (
                 <Input
                     value={text}
-                //   onChange={(e) => handleChange(e.target.value, record.key, 'name')}
-
+                    onChange={(e) => handleInputChange(record.key, 'aadharNumber', e.target.value)}
+                />
+            )
+        },
+        {
+            title: 'Gender',
+            dataIndex: 'gender',
+            key: 'gender',
+            render: (text, record) => (
+                <Radio.Group defaultValue={'M'} style={{ width: 250 }} onChange={(e) => handleInputChange(record.key, 'gender', e.target.value)}>
+                    <Radio value='M'>Male</Radio>
+                    <Radio value='F'>Female</Radio>
+                    <Radio value='O'>Other</Radio>
+                </Radio.Group>
+            )
+        },
+        {
+            title: 'Moble Number',
+            dataIndex: 'mobileNumber',
+            key: 'mobileNumber',
+            render: (text, record) => (
+                <Input
+                    value={text}
+                    onChange={(e) => handleInputChange(record.key, 'mobileNumber', e.target.value)}
                 />
             )
         },
         {
             title: '',
             key: 'action',
+            hidden: dataSource.length > 0 ? false : true,
             render: (text, record) => (
-                <DeleteOutlined style={{ color: 'red', cursor:'pointer'}} onClick={()=>handleDelete(record.key)} />
+                <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} onClick={() => handleDelete(record.key)} />
             )
         }
     ];
@@ -83,7 +117,7 @@ const VipDetails = () => {
             <Table
                 dataSource={dataSource}
                 columns={columns}
-                style={{ width: '50%' }}
+                style={{ width: '80%' }}
                 size='small'
                 className='bordered-table'
                 pagination={false}

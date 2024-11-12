@@ -22,7 +22,7 @@ const Login = () => {
         <>
             <Title level={2} style={{ textAlign: 'center' }}> Government of Andhra Pradesh - Endowment Department</Title>
 
-            <Flex justify='space-between' wrap>
+            <Flex justify='space-between' wrap style={{marginTop:50}}>
                 <div>
                     <div style={{ textAlign: 'center' }}>
                         <Image
@@ -32,6 +32,17 @@ const Login = () => {
                         />
                         <Title level={4} style={{ margin: 5 }}>Sri Nara Chandrababu Naidu</Title>
                         <Text>Hon’ble Chief Minister of Andhra Pradesh</Text>
+                    </div>
+                </div>
+                <div>
+                <div style={{ textAlign: 'center' }}>
+                        <Image
+                            width={350}
+                            src='https://aptemples.ap.gov.in/static/media/annam-reddy.efc55495.webp'
+                            style={{ borderRadius: '8px' }}
+                        />
+                        <Title level={4} style={{ margin: 5 }}>Sri Anam Ramanarayana Reddy</Title>
+                        <Text>Hon'ble Minister for Endowments</Text>
                     </div>
                 </div>
                 <div style={{ width: '30%', marginTop: '3%', marginRight: '5%' }}>
