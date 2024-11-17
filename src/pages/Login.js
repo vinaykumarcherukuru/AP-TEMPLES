@@ -1,28 +1,49 @@
 import React from 'react'
-import { Button, Flex, Form, Image, Input, Typography } from 'antd';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../redux/actions/authActions';
+import { Button, Flex, Form, Image, Input, notification, Typography } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../redux/actions/authActions';
 import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
 const Login = () => {
+    const { users } = useSelector(state => state.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const handleLogin = () => {
-        dispatch(setUser({
-            isAuthenticated: true,
-            userName: 'Vinay Kumar',
-            role: 'EO'
-        })).then(() =>
-            navigate("/")
-        );
+
+    const [form] = Form.useForm();
+
+    const onFinish = (data) => {
+        const user = users.find(x => x.role === data.userName && x.password === data.password);
+        if (user) {
+            dispatch(login({
+                isAuthenticated: true,
+                userName: data.userName,
+                candidateName: user?.candidatename || '',
+                constituency: user?.constituency || '',
+                party: user?.party || '',
+                role: user.role,
+                uid: user.uid
+            })).then(() =>
+                navigate(user.role === 'eo' ? "/history" : "/")
+            );
+        }
+        else {
+            notification.error({
+                message: 'Error',
+                description: 'User does not exists.',
+                style: {
+                    backgroundColor: '#ffccc7',
+                    color: '#fff'
+                },
+            })
+        }
     };
     return (
         <>
             <Title level={2} style={{ textAlign: 'center' }}> Government of Andhra Pradesh - Endowment Department</Title>
 
-            <Flex justify='space-between' wrap style={{marginTop:50}}>
+            <Flex justify='space-between' wrap style={{ marginTop: 50 }}>
                 <div>
                     <div style={{ textAlign: 'center' }}>
                         <Image
@@ -35,7 +56,7 @@ const Login = () => {
                     </div>
                 </div>
                 <div>
-                <div style={{ textAlign: 'center' }}>
+                    <div style={{ textAlign: 'center' }}>
                         <Image
                             width={350}
                             src='https://aptemples.ap.gov.in/static/media/annam-reddy.efc55495.webp'
@@ -58,13 +79,14 @@ const Login = () => {
                         initialValues={{
                             remember: true,
                         }}
-                        onFinish={handleLogin}
+                        onFinish={onFinish}
                         // onFinishFailed={onFinishFailed}
                         autoComplete="off"
+                        form={form}
                     >
                         <Form.Item
                             label="Username"
-                            name="username"
+                            name="userName"
                             rules={[
                                 {
                                     required: true,

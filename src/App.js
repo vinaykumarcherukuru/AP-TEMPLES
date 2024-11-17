@@ -6,14 +6,15 @@ import themeConfig from "./config/themeConfig.json";
 import AppRoutes from './routes/AppRoutes';
 import { useDispatch, useSelector } from 'react-redux';
 import Login from './pages/Login';
-import { setUser } from './redux/actions/authActions';
+import { login, logout } from './redux/actions/authActions';
 
 const { Header, Content, Footer } = Layout;
 const { components } = themeConfig;
 const { defaultAlgorithm, darkAlgorithm } = theme;
+const { Text } = Typography;
 
 function App() {
-  const { isAuthenticated } = useSelector((state) => state.auth)
+  const { isAuthenticated, candidateName, role } = useSelector((state) => state.auth)
   const dispatch = useDispatch();
 
   const temples = [
@@ -75,7 +76,7 @@ function App() {
   ]
 
   const handleLogout = () => {
-    dispatch(setUser({}));
+    dispatch(logout());
     //navigate("/"); // "/" represents the home page route 
   };
 
@@ -93,7 +94,8 @@ function App() {
               <div className="logo" style={{ color: 'white', fontSize: '24px', width: '100%' }}>
                 <Image src='https://aptemples.ap.gov.in/static/media/ap-temples-logo.556d4f9f.svg' />
               </div>
-              {isAuthenticated && <div>
+              {isAuthenticated && <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                <Text style={{ color: '#fff', width: 200, fontSize: 16 }}>Welcome {candidateName}</Text>
                 <Button
                   style={{ backgroundColor: '#ce5524', color: '#ffffff', border: 'none', fontWeight: 600 }}
                   icon={<LogoutOutlined />}
@@ -114,22 +116,22 @@ function App() {
               left: 0,
               right: 0,
               zIndex: 10, // Ensure it's above other content
-              backgroundColor:'#9a031e',
-              height:50
+              backgroundColor: '#9a031e',
+              height: 50
             }}
           >
             {isAuthenticated &&
-            <Menu mode="horizontal" defaultSelectedKeys={['1']} style={{ paddingLeft: 40 }}>
-              <Menu.Item key="1"><Link to="/">Temples</Link></Menu.Item>
-              <Menu.Item key="2"><Link to="/onlinebooking">VIP Darshanam</Link></Menu.Item>
-              <Menu.Item key="3"><Link to="/history">Booking History</Link></Menu.Item>
-              {/* <Menu.Item key="4"><Link to="/services">Services</Link></Menu.Item>
+              <Menu mode="horizontal" defaultSelectedKeys={['1']} style={{ paddingLeft: 40 }}>
+                {role !== 'eo' && <Menu.Item key="1"><Link to="/">Temples</Link></Menu.Item>}
+                {role !== 'eo' && <Menu.Item key="2"><Link to="/onlinebooking">VIP Darshanam</Link></Menu.Item>}
+                {role === 'eo' && <Menu.Item key="3"><Link to="/history">Booking History</Link></Menu.Item>}
+                {/* <Menu.Item key="4"><Link to="/services">Services</Link></Menu.Item>
               <Menu.Item key="5"><Link to="/contact">Contact</Link></Menu.Item> */}
-            </Menu>
-}
+              </Menu>
+            }
           </div>
 
-          <Content style={{ padding: '50px', background: '#fff', marginTop: 80, minHeight:'80vh' }}>
+          <Content style={{ padding: '50px', background: '#fff', marginTop: 80, minHeight: '80vh' }}>
             <div>
               {!isAuthenticated && <Login />}
               {isAuthenticated && <AppRoutes />}

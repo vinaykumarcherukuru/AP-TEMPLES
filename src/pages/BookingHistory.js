@@ -1,5 +1,6 @@
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Flex, Modal, Space, Table, Tag, Tooltip, Typography } from 'antd'
+import { Button, Flex, Modal, Popconfirm, Space, Table, Tag, Tooltip, Typography } from 'antd'
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
@@ -17,13 +18,19 @@ const BookingHistory = () => {
 
     const columns = [
         {
+            title: 'Candidate name',
+            dataIndex: 'candidateName',
+            key: 'candidateName'
+        },
+        {
+            title: 'Party name',
+            dataIndex: 'party',
+            key: 'party'
+        },
+        {
             title: 'Constituency',
             dataIndex: 'constituency',
-            key: 'constituency',
-            render: (text, record, index) => (<>
-                MLA
-            </>
-            )
+            key: 'constituency'
         },
         {
             title: 'Temple',
@@ -31,14 +38,36 @@ const BookingHistory = () => {
             key: 'temple'
         },
         {
-            title: 'Darshanam Date',
-            dataIndex: 'darshanmDate',
-            key: 'darshanmDate'
+            title: 'Booking Date',
+            dataIndex: 'bookingDate',
+            key: 'bookingDate'
         },
         {
-            title: 'Accomidation',
+            title: 'Darshanam Date',
+            dataIndex: 'darshanamDate',
+            key: 'darshanamDate',
+            render: (text, record, index) => (<>
+                {moment(record.darshanamDate).format('DD-MM-YYYY')}
+            </>
+            )
+        },
+        {
+            title: 'Accommodation',
+            dataIndex: 'isAccommodation',
+            key: 'isAccommodation',
+            render: (text, record, index) => (<>
+                {record.isAccommodation === 'Y' ? 'Yes' : 'No'}
+            </>
+            )
+        },
+        {
+            title: 'Accommodation Date',
             dataIndex: 'accommodation',
-            key: 'accommodation'
+            key: 'accommodation',
+            render: (text, record, index) => (<>
+                {record.isAccommodation === 'Y' ? moment(record.accommodation).format('DD-MM-YYYY') : ''}
+            </>
+            )
         },
         {
             title: 'Status',
@@ -58,15 +87,19 @@ const BookingHistory = () => {
             key: 'action',
             render: (text, record, index) => (
                 <Flex gap={10}>
-                    <Tooltip title='View'>
+                    <Tooltip title='View Members'>
                         <EyeOutlined style={{ color: 'blue', fontSize: 16, cursor: 'pointer' }} onClick={() => { setRowIndex(index); setIsOpen(true) }} />
                     </Tooltip>
                     <Tooltip title='Accept'>
                         <CheckOutlined style={{ color: 'green', fontSize: 16, cursor: 'pointer' }} />
                     </Tooltip>
-                    <Tooltip title='Reject'>
+                    <Popconfirm
+                        title="Are you sure to reject this booking?"
+                        okText="Yes"
+                        cancelText="No"
+                    >
                         <CloseOutlined style={{ color: 'red', fontSize: 16, cursor: 'pointer' }} />
-                    </Tooltip>
+                    </Popconfirm>
                 </Flex>
             )
         }
@@ -85,18 +118,24 @@ const BookingHistory = () => {
         },
         {
             title: 'Aadhar Number',
-            dataIndex: 'aadharNumber',
-            key: 'aadharNumber'
+            dataIndex: 'aadhar',
+            key: 'aadhar'
         },
         {
             title: 'Gender',
             dataIndex: 'gender',
-            key: 'gender'
+            key: 'gender',
+            render: (text, record, index) => (<>
+                {record.gender === 'M' && <Text>Male</Text>}
+                {record.gender === 'F' && <Text>Female</Text>}
+                {record.gender === 'O' && <Text>Other</Text>}
+            </>
+            )
         },
         {
             title: 'Moble Number',
-            dataIndex: 'mobileNumber',
-            key: 'mobileNumber'
+            dataIndex: 'mobile',
+            key: 'mobile'
         }
     ]
 
@@ -107,20 +146,21 @@ const BookingHistory = () => {
             <Table
                 dataSource={dataSource}
                 columns={columns}
-                style={{ width: '70%' }}
                 size='small'
                 className='bordered-table'
                 pagination={{ pageSize: 12 }}
+                style={{width:'90%'}}
             />
 
             <Modal title="Member Details" centered open={isOpen} onOk={() => setIsOpen(false)} onCancel={() => setIsOpen(false)}>
                 <br />
                 <Table
-                    dataSource={dataSource[rowIndex]?.Members}
+                    dataSource={dataSource[rowIndex]?.members}
                     columns={ColMembers}
                     size='small'
                     className='bordered-table'
                     pagination={false}
+                    scroll={{ x: "max-content" }}
                 />
                 <br />
             </Modal>

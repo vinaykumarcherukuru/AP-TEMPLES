@@ -18,7 +18,7 @@
             "itemSelectedBg": "#ffffff"
         },
         "Form": {
-            "itemMarginBottom": 15
+            "itemMarginBottom": 6
         }         
     }
 }

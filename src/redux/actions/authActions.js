@@ -1,11 +1,23 @@
 export const Auth_Types = {
-    SET_USER: 'SET_USER'
+    LOGIN: 'LOGIN',
+    LOGOUT: 'LOGOUT'
 }
 
-export const setUser = (data) => async (dispatch) => {
+export const login = (data) => async (dispatch) => {
     try {
         dispatch({
-            type: Auth_Types.SET_USER,
+            type: Auth_Types.LOGIN,
+            payload: data
+        })
+    } catch (error) {
+
+    }
+}
+
+export const logout = (data) => async (dispatch) => {
+    try {
+        dispatch({
+            type: Auth_Types.LOGOUT,
             payload: data
         })
     } catch (error) {
