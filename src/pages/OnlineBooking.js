@@ -9,8 +9,10 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 const OnlineBooking = () => {
-    const { candidateName, party, constituency, role } = useSelector((state) => state.auth)
+    const { candidateName, party, constituency, role } = useSelector((state) => state.auth);
+    const booking = useSelector((state) => state.booking);
     const [isAccommodation, setIsAccommodation] = useState(true);
+    const [selectedTemple, setSelectedTemple] = useState(null);
     const dispatch = new useDispatch();
     const temples = [
         {
@@ -91,7 +93,8 @@ const OnlineBooking = () => {
                 },
             })
             form.resetFields();
-            // setIsreset(!isreset);
+            setSelectedTemple(null);
+            setIsAccommodation('Y');
         }
         );
     }
@@ -109,7 +112,7 @@ const OnlineBooking = () => {
         return current.date(); // Return normal date for weekdays
     };
 
-    const disabledDate = (current) => {
+    /*const disabledDate = (current) => {
         // Disable weekends (Saturday and Sunday)
         const isWeekend = current.day() === 0 || current.day() === 6; // 0 is Sunday, 6 is Saturday
 
@@ -118,216 +121,253 @@ const OnlineBooking = () => {
         const isDisabledMonth = !allowedMonths.includes(current.format('YYYY-MM')); // Disable non-allowed months
 
         return isWeekend || isDisabledMonth; // Disable weekends and non-allowed months
-    };
+    };*/
 
-    return (<>
-        <Title level={4}>VIP Darshanam</Title>
-        <br />
+    const disabledDate = (current) => {
+        // Get the dates to disable based on the selected temple
+        const templeDates = booking
+            .filter(x => x.temple === selectedTemple)
+            .map(x => x.darshanamDate?.format('YYYY-MM-DD'));
 
-        <Form
-            layout="vertical"
-            name="bookingForm"
-            initialValues={{ isAccommodation: 'Y', members: [{}] }}
-            form={form}
-            onFinish={onFinish}
-        >
-            {/* Main form items in a responsive row */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-                <Form.Item
-                    name="temple"
-                    label="Temple"
-                    rules={[{ required: true, message: 'Temple required!' }]}
+        // Disable weekends (Saturday and Sunday)
+        const isWeekend = current.day() === 0 || current.day() === 6;
+
+        // Disable the temple's darshanamDate and weekends
+        return templeDates.includes(current.format('YYYY-MM-DD')) || isWeekend ;
+    }
+
+
+return (<>
+    <Title level={4}>VIP Darshanam</Title>
+    <br />
+    <Form
+        layout="vertical"
+        name="bookingForm"
+        initialValues={{ isAccommodation: 'Y', members: [{}] }}
+        form={form}
+        onFinish={onFinish}
+    >
+        {/* Main form items in a responsive row */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+            <Form.Item
+                name="temple"
+                label="Temple"
+                rules={[{ required: true, message: 'Temple required!' }]}
+            >
+                <Select placeholder="Select temple" style={{ width: 250 }} onChange={((value) => setSelectedTemple(value))}>
+                    {temples.map((temple, index) => (
+                        <Option key={index} value={temple.name}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <img
+                                    src={temple.image}
+                                    alt={temple.name}
+                                    style={{ width: 25, height: 25, marginRight: 10 }}
+                                />
+                                {temple.name} - {temple.location}
+                            </div>
+                        </Option>
+                    ))}
+                </Select>
+            </Form.Item>
+            {booking.filter(x => x.temple === selectedTemple)?.darshanamDate?.format('YYYY-MM-DD')}
+            <Form.Item
+                name="darshanamDate"
+                label="Darshan Date"
+                format
+                rules={[{ required: true, message: 'Darshan date required!' }]}
+            >
+                <DatePicker
+                    style={{ width: 250 }}
+                    //disabledDate={disabledDate}
+                    //dateRender={dateRender}
+                    format='DD-MM-YYYY'
+                    disabledDate={disabledDate}
+                    renderExtraFooter={() => (
+                        <style>{`
+                                .ant-picker-cell-disabled .ant-picker-cell-inner {
+                                    background-color: red !important; /* Light grey background for disabled dates */
+                                    color:#fff !important;
+                                }
+                                .ant-picker-cell:not(.ant-picker-cell-disabled) .ant-picker-cell-inner {
+                                    background-color: green !important; /* Green background for enabled dates */
+                                    color:#fff !important;
+                                }
+                            `}</style>
+                    )}
+                    disabled={selectedTemple === null}
+                />
+            </Form.Item>
+
+            <Form.Item
+                name="isAccommodation"
+                label="Accommodation"
+            >
+                <Select
+                    style={{ width: 250 }}
+                    onChange={(value) => setIsAccommodation(value === 'Y' ? true : false)}
+                    disabled={selectedTemple === null}
                 >
-                    <Select placeholder="Select temple" style={{ width: 250 }}>
-                        {temples.map((temple, index) => (
-                            <Option key={index} value={temple.name}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <img
-                                        src={temple.image}
-                                        alt={temple.name}
-                                        style={{ width: 25, height: 25, marginRight: 10 }}
-                                    />
-                                    {temple.name} - {temple.location}
-                                </div>
-                            </Option>
-                        ))}
-                    </Select>
-                </Form.Item>
-
+                    <Option value="Y">Yes</Option>
+                    <Option value="N">No</Option>
+                </Select>
+            </Form.Item>
+            {isAccommodation &&
                 <Form.Item
-                    name="darshanamDate"
-                    label="Darshan Date"
-                    format
-                    rules={[{ required: true, message: 'Darshan date required!' }]}
+                    name="accommodationDate"
+                    label="Accommodation Date"
+                    rules={[{ required: true, message: 'Accommodation date required!' }]}
                 >
                     <DatePicker
                         style={{ width: 250 }}
                         disabledDate={disabledDate}
                         //dateRender={dateRender}
                         format='DD-MM-YYYY'
+                        disabled={selectedTemple === null}
                     />
                 </Form.Item>
+            }
 
-                <Form.Item
-                    name="isAccommodation"
-                    label="Accommodation"
-                >
-                    <Select style={{ width: 250 }} onChange={(value) => setIsAccommodation(value === 'Y' ? true : false)}>
-                        <Option value="Y">Yes</Option>
-                        <Option value="N">No</Option>
-                    </Select>
-                </Form.Item>
-                {isAccommodation &&
-                    <Form.Item
-                        name="accommodationDate"
-                        label="Accommodation Date"
-                        rules={[{ required: true, message: 'Accommodation date required!' }]}
-                    >
-                        <DatePicker
-                            style={{ width: 250 }}
-                            disabledDate={disabledDate}
-                            //dateRender={dateRender}
-                            format='DD-MM-YYYY'
-                        />
-                    </Form.Item>
-                }
+            <Form.Item label=" ">
+                <Button type="primary" onClick={() => form.submit()} style={{ backgroundColor: 'rgb(206, 85, 36)', color: '#ffffff', border: 'none' }}>Submit</Button>
+            </Form.Item>
+        </div>
 
-                <Form.Item label=" ">
-                    <Button type="primary" onClick={() => form.submit()} style={{ backgroundColor: 'rgb(206, 85, 36)', color: '#ffffff', border: 'none' }}>Submit</Button>
-                </Form.Item>
+        <div style={{ display: 'flex', gap: 5, marginTop: 35, marginBottom: 20 }}>
+            <div>
+                <strong>Piligrim Details</strong>
             </div>
+            <div style={{ color: 'gray' }}>
+                {`(You can add up to 5 members)`}
+            </div>
+        </div>
 
-            <div style={{ display: 'flex', gap: 10, marginTop: 35, marginBottom: 20 }}>
+        {/* Member details */}
+        <Form.List name="members">
+            {(fields, { add, remove }) => (
                 <div>
-                    <strong>Member Details</strong>
-                </div>
-                <div style={{ color: 'gray' }}>
-                    {`(You can add up to 5 members)`}
-                </div>
-            </div>
-
-            {/* Member details */}
-            <Form.List name="members">
-                {(fields, { add, remove }) => (
-                    <div>
-                        {fields.map((field, index) => (
-                            <Space key={field.key} style={{ display: 'flex', flexWrap: 'wrap', marginBottom: 8 }} align="baseline">
-                                <Form.Item
-                                    {...field}
-                                    name={[field.name, 'name']}
-                                    fieldKey={[field.fieldKey, 'name']}
-                                    label={index === 0 ? 'Name' : ''}
-                                    rules={[{ required: true, message: 'Name required!' }]}
-                                    style={{ flex: '1 1 150px' }}
-                                >
-                                    <Input placeholder="Name" />
-                                </Form.Item>
-                                <Form.Item
-                                    {...field}
-                                    name={[field.name, 'age']}
-                                    fieldKey={[field.fieldKey, 'age']}
-                                    label={index === 0 ? 'Age' : ''}
-                                    rules={[
-                                        { required: true, message: 'Age required!' },
-                                        {
-                                            validator(_, value) {
-                                                if (!value) {
-                                                    return Promise.resolve(); // Allows empty input if not required
-                                                }
-                                                if (!isNaN(value) && Number(value) <= 100) {
-                                                    return Promise.resolve();
-                                                }
-                                                return Promise.reject(new Error('Max age allowed 100'));
-                                            },
-                                        }
-                                    ]}
-                                    style={{ flex: '1 1 100px' }}
-                                >
-                                    <Input
-                                        placeholder="Age"
-                                        onInput={(e) => {
-                                            e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                                        }} />
-                                </Form.Item>
-                                <Form.Item
-                                    {...field}
-                                    name={[field.name, 'aadhar']}
-                                    fieldKey={[field.fieldKey, 'aadhar']}
-                                    label={index === 0 ? 'Aadhar' : ''}
-                                    rules={[
-                                        { required: true, message: 'Aadhar required!' },
-                                        { pattern: /^[0-9]{12}$/, message: 'Enter 12-digit Aadhar' }
-                                    ]}
-                                    style={{ flex: '1 1 200px' }}
-                                >
-                                    <Input
-                                        placeholder="Aadhar"
-                                        maxLength={12}
-                                        onInput={(e) => {
-                                            e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                                        }}
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    {...field}
-                                    name={[field.name, 'gender']}
-                                    fieldKey={[field.fieldKey, 'gender']}
-                                    label={index === 0 ? 'Gender' : ''}
-                                    rules={[{ required: true, message: 'Gender required!' }]}
-                                    style={{ flex: '1 1 120px' }}
-                                >
-                                    <Select placeholder="Gender" style={{ width: 150 }}>
-                                        <Option value="M">Male</Option>
-                                        <Option value="F">Female</Option>
-                                        <Option value="O">Other</Option>
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item
-                                    {...field}
-                                    name={[field.name, 'mobile']}
-                                    fieldKey={[field.fieldKey, 'mobile']}
-                                    label={index === 0 ? 'Mobile' : ''}
-                                    rules={[
-                                        { required: true, message: 'Mobile required!' },
-                                        { pattern: /^[0-9]{10}$/, message: 'Enter 10-digit mobile number' }
-                                    ]}
-                                    style={{ flex: '1 1 180px' }}
-                                >
-                                    <Input
-                                        placeholder="Mobile"
-                                        type="tel"
-                                        maxLength={10}
-                                        onInput={(e) => {
-                                            e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                                        }}
-                                    />
-                                </Form.Item>
-                                {index > 0 &&
-                                    <Form.Item label={index === 0 ? ' ' : ''}>
-                                        <MinusCircleOutlined onClick={() => remove(field.name)} />
-                                    </Form.Item>
-                                }
-                            </Space>
-                        ))}
-                        {fields.length < 5 &&
-                            <Form.Item style={{ textAlign: 'center', width: '60%'}}>
-                                <Button
-                                    type="link"
-                                    onClick={() => add()}
-                                    block
-                                    icon={<PlusCircleOutlined />}
-                                    style={{ color: 'black', marginTop: 10, width:100 }}
-                                >
-                                    Add Member
-                                </Button>
+                    {fields.map((field, index) => (
+                        <Space key={field.key} style={{ display: 'flex', flexWrap: 'wrap', marginBottom: 8 }} align="baseline">
+                            <Form.Item
+                                {...field}
+                                name={[field.name, 'name']}
+                                fieldKey={[field.fieldKey, 'name']}
+                                label={index === 0 ? 'Name (As per Aadhar)' : ''}
+                                rules={[{ required: true, message: 'Name required!' }]}
+                                style={{ flex: '1 1 150px' }}
+                            >
+                                <Input
+                                    placeholder="Name"
+                                    onInput={(e) => {
+                                        e.target.value = e.target.value.trimStart().replace(/[^a-zA-Z\s]/g, '');
+                                    }}
+                                />
                             </Form.Item>
-                        }
-                    </div>
-                )}
-            </Form.List>
-        </Form>
-    </>
-    );
+                            <Form.Item
+                                {...field}
+                                name={[field.name, 'age']}
+                                fieldKey={[field.fieldKey, 'age']}
+                                label={index === 0 ? 'Age' : ''}
+                                rules={[
+                                    { required: true, message: 'Age required!' },
+                                    {
+                                        validator(_, value) {
+                                            if (!value) {
+                                                return Promise.resolve(); // Allows empty input if not required
+                                            }
+                                            if (!isNaN(value) && Number(value) <= 100) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error('Max age allowed 100'));
+                                        },
+                                    }
+                                ]}
+                                style={{ flex: '1 1 100px' }}
+                            >
+                                <Input
+                                    placeholder="Age"
+                                    onInput={(e) => {
+                                        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                                    }} />
+                            </Form.Item>
+                            <Form.Item
+                                {...field}
+                                name={[field.name, 'aadhar']}
+                                fieldKey={[field.fieldKey, 'aadhar']}
+                                label={index === 0 ? 'Aadhar' : ''}
+                                rules={[
+                                    { required: true, message: 'Aadhar required!' },
+                                    { pattern: /^[0-9]{12}$/, message: 'Enter 12-digit Aadhar' }
+                                ]}
+                                style={{ flex: '1 1 200px' }}
+                            >
+                                <Input
+                                    placeholder="Aadhar"
+                                    maxLength={12}
+                                    onInput={(e) => {
+                                        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                                    }}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                {...field}
+                                name={[field.name, 'gender']}
+                                fieldKey={[field.fieldKey, 'gender']}
+                                label={index === 0 ? 'Gender' : ''}
+                                rules={[{ required: true, message: 'Gender required!' }]}
+                                style={{ flex: '1 1 120px' }}
+                            >
+                                <Select placeholder="Gender" style={{ width: 150 }}>
+                                    <Option value="M">Male</Option>
+                                    <Option value="F">Female</Option>
+                                    <Option value="O">Other</Option>
+                                </Select>
+                            </Form.Item>
+                            <Form.Item
+                                {...field}
+                                name={[field.name, 'mobile']}
+                                fieldKey={[field.fieldKey, 'mobile']}
+                                label={index === 0 ? 'Mobile' : ''}
+                                rules={[
+                                    { required: true, message: 'Mobile required!' },
+                                    { pattern: /^[0-9]{10}$/, message: 'Enter 10-digit mobile number' }
+                                ]}
+                                style={{ flex: '1 1 180px' }}
+                            >
+                                <Input
+                                    placeholder="Mobile"
+                                    type="tel"
+                                    maxLength={10}
+                                    onInput={(e) => {
+                                        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                                    }}
+                                />
+                            </Form.Item>
+                            {index > 0 &&
+                                <Form.Item label={index === 0 ? ' ' : ''}>
+                                    <MinusCircleOutlined onClick={() => remove(field.name)} />
+                                </Form.Item>
+                            }
+                        </Space>
+                    ))}
+                    {fields.length < 5 &&
+                        <Form.Item style={{ textAlign: 'center', width: '65%' }}>
+                            <Button
+                                type="link"
+                                onClick={() => add()}
+                                block
+                                icon={<PlusCircleOutlined />}
+                                style={{ color: 'black', marginTop: 10, width: 100 }}
+                            >
+                                Add Piligrim
+                            </Button>
+                        </Form.Item>
+                    }
+                </div>
+            )}
+        </Form.List>
+    </Form>
+</>
+);
 };
 
 export default OnlineBooking;
