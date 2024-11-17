@@ -1,12 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { ConfigProvider, Layout, Menu, Typography, List, theme, Image, Flex, Button } from 'antd';
-import { LogoutOutlined } from '@ant-design/icons';
 import themeConfig from "./config/themeConfig.json";
 import AppRoutes from './routes/AppRoutes';
 import { useDispatch, useSelector } from 'react-redux';
 import Login from './pages/Login';
-import { login, logout } from './redux/actions/authActions';
+import Logout from './pages/Logout';
 
 const { Header, Content, Footer } = Layout;
 const { components } = themeConfig;
@@ -14,72 +13,7 @@ const { defaultAlgorithm, darkAlgorithm } = theme;
 const { Text } = Typography;
 
 function App() {
-  const { isAuthenticated, candidateName, role } = useSelector((state) => state.auth)
-  const dispatch = useDispatch();
-
-  const temples = [
-    {
-      name: 'Kanipakam',
-      location: 'Chittoor',
-      image: 'https://aptemples.ap.gov.in/static/media/kanipakam.9b4bfaa2.webp'
-    },
-    {
-      name: 'Srikalahasthi',
-      location: 'Chittoor',
-      image: 'https://aptemples.ap.gov.in/static/media/Srikalahasthi.8f24fb6e.webp'
-    },
-    {
-      name: 'Srisailam',
-      location: 'Kurnool',
-      image: 'https://aptemples.ap.gov.in/static/media/Srisailam.ff1f7ced.webp'
-    },
-    {
-      name: 'Mahanandi',
-      location: 'Kurnool',
-      image: 'https://aptemples.ap.gov.in/static/media/Mahanadi.c02e5669.webp'
-    },
-    {
-      name: 'Kasapuram',
-      location: 'Guntakal',
-      image: 'https://aptemples.ap.gov.in/static/media/Kasapuram.a7036c1d.webp'
-    },
-    {
-      name: 'Vijayawada',
-      location: 'Vijayawada',
-      image: 'https://aptemples.ap.gov.in/static/media/Vijajayawada.df6b8dc1.webp'
-    },
-    {
-      name: 'Dwaraka Tirumala',
-      location: 'Tirumala',
-      image: 'https://aptemples.ap.gov.in/static/media/DwaralkaTirumala.6ae0c508.webp'
-    },
-    {
-      name: 'Annavaram',
-      location: 'East Godavari',
-      image: 'https://aptemples.ap.gov.in/static/media/Anavaram.eb338f61.webp'
-    },
-    {
-      name: 'Simhachalam',
-      location: 'Visakhapatnam',
-      image: 'https://aptemples.ap.gov.in/static/media/Simhachalam.5eb55b06.webp'
-    },
-    {
-      name: 'Sri Kanaka Mahalakshmi',
-      location: 'Burujupeta',
-      image: 'https://aptemples.ap.gov.in/static/media/SriKanakaMahalakshmi.00641c25.webp'
-    },
-    {
-      name: 'Penuganchiprolu',
-      location: 'Vijayawada',
-      image: 'https://aptemples.ap.gov.in/static/media/Penugachiprolu.99e48db0.webp'
-    }
-  ]
-
-  const handleLogout = () => {
-    dispatch(logout());
-    //navigate("/"); // "/" represents the home page route 
-  };
-
+  const { isAuthenticated, candidateName, role } = useSelector((state) => state.auth);
   return (
     <ConfigProvider
       theme={{
@@ -96,13 +30,7 @@ function App() {
               </div>
               {isAuthenticated && <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                 <Text style={{ color: '#fff', width: 200, fontSize: 16 }}>Welcome {candidateName}</Text>
-                <Button
-                  style={{ backgroundColor: '#ce5524', color: '#ffffff', border: 'none', fontWeight: 600 }}
-                  icon={<LogoutOutlined />}
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
+                <Logout />
               </div>
               }
             </Flex>

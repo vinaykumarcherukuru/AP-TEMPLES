@@ -136,7 +136,7 @@ const OnlineBooking = () => {
                 <Form.Item
                     name="temple"
                     label="Temple"
-                    rules={[{ required: true, message: 'Temple name required!' }]}
+                    rules={[{ required: true, message: 'Temple required!' }]}
                 >
                     <Select placeholder="Select temple" style={{ width: 250 }}>
                         {temples.map((temple, index) => (
