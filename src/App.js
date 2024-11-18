@@ -26,7 +26,7 @@ function App() {
           <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
             <Flex justify='space-between' align='center'>
               <div className="logo" style={{ color: 'white', fontSize: '24px', width: '100%' }}>
-                <Image src='https://aptemples.ap.gov.in/static/media/ap-temples-logo.556d4f9f.svg' />
+                <Image src='https://aptemples.ap.gov.in/static/media/ap-temples-logo.556d4f9f.svg' preview={false} />
               </div>
               {isAuthenticated && <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                 <Text style={{ color: '#fff', width: 200, fontSize: 16 }}>Welcome {candidateName}</Text>

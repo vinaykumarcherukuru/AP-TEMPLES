@@ -5,7 +5,9 @@ const bookingReducer = (state = initialState, action) => {
         case "ADD":
             return [...state, action.payload];
         case "UPDATE":
-            return action.payload;
+            const index = state.findIndex(x => x.uuid === action.payload.uuid);
+            state[index].members = action.payload.members
+            return state;
         default:
             return state;
     }

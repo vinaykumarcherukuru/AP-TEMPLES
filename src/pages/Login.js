@@ -59,7 +59,7 @@ const Login = () => {
                     <div style={{ textAlign: 'center' }}>
                         <Image
                             width={350}
-                            src='https://aptemples.ap.gov.in/static/media/annam-reddy.efc55495.webp'
+                            src='https://i.imghippo.com/files/prc3955Az.png'
                             style={{ borderRadius: '8px' }}
                         />
                         <Title level={4} style={{ margin: 5 }}>Sri Anam Ramanarayana Reddy</Title>

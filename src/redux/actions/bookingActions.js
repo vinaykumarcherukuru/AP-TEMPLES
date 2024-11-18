@@ -14,15 +14,11 @@ const BookingDetails = {
 
         }
     },
-    UpdateDetails: (data) => async (dispatch) => {
-        try {
-            dispatch({
-                type: Booking_Types.UPDATE,
-                payload: data
-            })
-        } catch (error) {
-
-        }
+    UpdateDetails: (data) => async (dispatch) => {alert(JSON.stringify(data))
+        dispatch({
+            type: Booking_Types.UPDATE,
+            payload: data
+        })
     }
 }
 
