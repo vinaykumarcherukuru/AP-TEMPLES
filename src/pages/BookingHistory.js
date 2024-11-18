@@ -1,10 +1,11 @@
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Flex, Modal, Popconfirm, Space, Table, Tag, Tooltip, Typography } from 'antd'
+import { Button, Flex, Form, Modal, Popconfirm, Select, Space, Table, Tag, Tooltip, Typography } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
 const { Title, Text } = Typography;
+const { Option } = Select;
 
 const BookingHistory = () => {
     const bookingHistory = useSelector((state) => state.booking);
@@ -18,15 +19,15 @@ const BookingHistory = () => {
 
     const columns = [
         {
-            title: 'Candidate name',
+            title: 'VIP Name',
             dataIndex: 'candidateName',
             key: 'candidateName'
         },
-        {
-            title: 'Party name',
-            dataIndex: 'party',
-            key: 'party'
-        },
+        // {
+        //     title: 'Party name',
+        //     dataIndex: 'party',
+        //     key: 'party'
+        // },
         {
             title: 'Constituency',
             dataIndex: 'constituency',
@@ -37,11 +38,11 @@ const BookingHistory = () => {
             dataIndex: 'temple',
             key: 'temple'
         },
-        {
-            title: 'Booking Date',
-            dataIndex: 'bookingDate',
-            key: 'bookingDate'
-        },
+        // {
+        //     title: 'Booking Date',
+        //     dataIndex: 'bookingDate',
+        //     key: 'bookingDate'
+        // },
         {
             title: 'Darshanam Date',
             dataIndex: 'darshanamDate',
@@ -69,18 +70,18 @@ const BookingHistory = () => {
             </>
             )
         },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (text, record, index) => (<>
-                {(index >= 0 && index < 5) && <Tag color="orange">Pending</Tag>}
-                {(index >= 5 && index < 9) && <Tag color="green">Approved</Tag>}
-                {(index >= 9 && index < 13) && <Tag color="red">Rejected</Tag>}
+        // {
+        //     title: 'Status',
+        //     dataIndex: 'status',
+        //     key: 'status',
+        //     render: (text, record, index) => (<>
+        //         {(index >= 0 && index < 5) && <Tag color="orange">Pending</Tag>}
+        //         {(index >= 5 && index < 9) && <Tag color="green">Approved</Tag>}
+        //         {(index >= 9 && index < 13) && <Tag color="red">Rejected</Tag>}
 
-            </>
-            )
-        },
+        //     </>
+        //     )
+        // },
         {
             title: 'Action',
             dataIndex: 'action',
@@ -139,17 +140,53 @@ const BookingHistory = () => {
         }
     ]
 
+    const [form] = Form.useForm();
+
     return (
         <>
-            <Title level={4}> Booking History</Title>
+            <Title level={4}> Booking History</Title><br/>
 
+            <Form
+                layout="vertical"
+                name="historyForm"
+                form={form}
+            >
+                {/* Main form items in a responsive row */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+                    <Form.Item
+                        name="category"
+                        label="Category"
+                    >
+                        <Select placeholder="Select Category" style={{ width: 250 }}>
+                             <Option value='mla'>MLA</Option>
+                             <Option value='rmp'>RMP</Option>
+                             <Option value='lmp'>LMP</Option>
+                             <Option value='mlc'>MLC</Option>
+                        </Select>
+                    </Form.Item>
+                     
+                    <Form.Item
+                        name="constituency"
+                        label="Constituency"
+                    >
+                        <Select placeholder="Select Constituency" style={{ width: 250 }}>
+                              
+                        </Select>
+                    </Form.Item>                     
+
+                    <Form.Item label=" ">
+                        <Button type="primary" onClick={() => form.submit()} style={{ backgroundColor: 'rgb(206, 85, 36)', color: '#ffffff', border: 'none' }}>Search</Button>
+                    </Form.Item>
+                </div>
+            </Form>
+            <br/> <br/>
             <Table
                 dataSource={dataSource}
                 columns={columns}
                 size='small'
                 className='bordered-table'
                 pagination={{ pageSize: 12 }}
-                style={{width:'90%'}}
+                style={{ width: '90%' }}
             />
 
             <Modal title="Member Details" centered open={isOpen} onOk={() => setIsOpen(false)} onCancel={() => setIsOpen(false)}>

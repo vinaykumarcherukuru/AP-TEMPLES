@@ -169,7 +169,7 @@ return (<>
                     ))}
                 </Select>
             </Form.Item>
-            {booking.filter(x => x.temple === selectedTemple)?.darshanamDate?.format('YYYY-MM-DD')}
+             
             <Form.Item
                 name="darshanamDate"
                 label="Darshan Date"
