@@ -14,7 +14,7 @@ const BookingDetails = {
 
         }
     },
-    UpdateDetails: (data) => async (dispatch) => {alert(JSON.stringify(data))
+    UpdateDetails: (data) => async (dispatch) => {
         dispatch({
             type: Booking_Types.UPDATE,
             payload: data
