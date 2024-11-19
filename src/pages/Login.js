@@ -141,7 +141,7 @@ const Login = () => {
                                 span: 16,
                             }}
                         >
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary" htmlType="submit" style={{backgroundColor: 'rgb(206, 85, 36)'}}>
                                 Submit
                             </Button>
                         </Form.Item>
