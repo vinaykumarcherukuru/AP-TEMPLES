@@ -48,22 +48,36 @@ const Login = () => {
                     <div style={{ textAlign: 'center' }}>
                         <Image
                             width={350}
+                            height={350}
                             src='https://aptemples.ap.gov.in/static/media/CBN.9c96666e.webp'
-                            style={{ borderRadius: '8px' }}
+                            style={{
+                                borderRadius: '8px',
+                                objectFit: 'cover'
+                            }}
+                            preview={false}
                         />
                         <Title level={4} style={{ margin: 5 }}>Sri Nara Chandrababu Naidu</Title>
                         <Text>Hon’ble Chief Minister of Andhra Pradesh</Text>
                     </div>
                 </div>
                 <div>
-                    <div style={{ textAlign: 'center' }}>
+                    <div style={{ textAlign: 'center', position:'relative' }}>
                         <Image
-                            width={350}
+                            width={390}
+                            height={375}
                             src='https://i.imghippo.com/files/prc3955Az.png'
-                            style={{ borderRadius: '8px' }}
+                            style={{
+                                borderRadius: '8px',
+                                objectFit: 'cover',
+                                objectPosition: 'center center', // Adjust the focus
+                                transform: 'scale(0.87)' // Slight zoom out 
+                            }}
+                            preview={false}
                         />
-                        <Title level={4} style={{ margin: 5 }}>Sri Anam Ramanarayana Reddy</Title>
-                        <Text>Hon'ble Minister for Endowments</Text>
+                        <div style={{bottom:-35,left:45, position:'absolute'}}>
+                            <Title level={4} style={{ margin: 5 }}>Sri Anam Ramanarayana Reddy</Title>
+                            <Text>Hon'ble Minister for Endowments</Text>
+                        </div>
                     </div>
                 </div>
                 <div style={{ width: '30%', marginTop: '3%', marginRight: '5%' }}>

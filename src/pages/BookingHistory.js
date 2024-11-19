@@ -14,6 +14,10 @@ const BookingHistory = () => {
     const [dataSource, setDataSource] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [rowIndex, setRowIndex] = useState(null);
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 2
+    });
 
     const dispatch = useDispatch();
 
@@ -27,7 +31,7 @@ const BookingHistory = () => {
     }, [rowIndex])
 
     useEffect(() => {
-        PiligrimForm.setFieldValue({ members: formData});
+        PiligrimForm.setFieldValue({ members: formData });
     }, [formData])
 
 
@@ -62,7 +66,7 @@ const BookingHistory = () => {
             dataIndex: 'darshanamDate',
             key: 'darshanamDate',
             render: (text, record, index) => (<>
-                {moment(record.darshanamDate).format('DD-MM-YYYY')}
+                {moment(record.darshanamDate.toString()).local().format('DD-MMM-YYYY')}
             </>
             )
         },
@@ -80,7 +84,7 @@ const BookingHistory = () => {
             dataIndex: 'accommodation',
             key: 'accommodation',
             render: (text, record, index) => (<>
-                {record.isAccommodation === 'Y' ? moment(record.accommodation).format('DD-MM-YYYY') : ''}
+                {record.isAccommodation === 'Y' ? moment(record.accommodationDate.toString()).local().format('DD-MMM-YYYY') : ''}
             </>
             )
         },
@@ -141,11 +145,19 @@ const BookingHistory = () => {
                         color: '#fff', // White text
                     },
                 })
-                 
+
                 setIsOpen(false);
                 setRowIndex(null);
             })
     }
+
+    const handleTableChange = (newPagination) => {
+        setPagination({
+            //...pagination,
+            current: newPagination.current,
+            pageSize: newPagination.pageSize,
+        });
+    };
 
     return (
         <>
@@ -190,8 +202,20 @@ const BookingHistory = () => {
                 columns={columns}
                 size='small'
                 className='bordered-table'
-                pagination={{ pageSize: 12 }}
-                style={{ width: '90%' }}
+                pagination={{
+                    //...pagination,
+                    showSizeChanger: true,
+                    //showQuickJumper: true,
+                    //showPrevNextJumpers: true,
+                    // pageSizeOptions: ["2", "4", "6"],
+                    // onShowSizeChange: (current, size) => {
+                    //     setPagination({ ...pagination, current, pageSize: size });
+                    // },
+                    showTotal: (total, range) =>
+                        `Showing ${range[0]}-${range[1]} of ${total} records`
+                }}
+                onChange={handleTableChange}
+                style={{ width: '90%', marginTop: 10 }}
             />
 
             <Modal
@@ -211,7 +235,7 @@ const BookingHistory = () => {
                 okText='Update'
                 onCancel={() => setIsOpen(false)}
                 destroyOnClose={true}
-                width={'90%'}
+                width={'70%'}
                 footer={[
                     <Button onClick={() => setIsOpen(false)} style={{ backgroundColor: 'gray', color: '#ffffff', border: 'none' }}>
                         Cancel
@@ -225,7 +249,7 @@ const BookingHistory = () => {
                         Update
                     </Button>
                 ]}
-            > 
+            >
                 <Form
                     layout="vertical"
                     name="memberForm"

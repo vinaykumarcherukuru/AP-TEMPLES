@@ -4,7 +4,7 @@ import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import BookingDetails from '../redux/actions/bookingActions';
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -81,7 +81,7 @@ const OnlineBooking = () => {
         data.party = party;
         data.constituency = constituency;
         data.role = role;
-        data.bookingDate = moment().format("DD-MM-YYYY hh:mm:ss A") 
+        data.bookingDate = moment().format("DD-MM-YYYY hh:mm:ss A")
 
         dispatch(BookingDetails.AddDetails(data)).then(() => {
             notification.success({
@@ -144,6 +144,7 @@ const OnlineBooking = () => {
     return (<>
         <Title level={4}>VIP Darshanam</Title>
         <br />
+
         <Form
             layout="vertical"
             name="bookingForm"
@@ -184,7 +185,7 @@ const OnlineBooking = () => {
                         style={{ width: 250 }}
                         //disabledDate={disabledDate}
                         //dateRender={dateRender}
-                        format='DD-MM-YYYY'
+                        format='DD-MMM-YYYY'
                         disabledDate={disabledDate}
                         renderExtraFooter={() => (
                             <style>{`
@@ -225,15 +226,15 @@ const OnlineBooking = () => {
                             style={{ width: 250 }}
                             disabledDate={disabledDate}
                             //dateRender={dateRender}
-                            format='DD-MM-YYYY'
+                            format='DD-MMM-YYYY'
                             disabled={selectedTemple === null}
                         />
                     </Form.Item>
                 }
 
-                <Form.Item label=" ">
+                {/* <Form.Item label=" ">
                     <Button type="primary" onClick={() => form.submit()} style={{ backgroundColor: 'rgb(206, 85, 36)', color: '#ffffff', border: 'none' }}>Submit</Button>
-                </Form.Item>
+                </Form.Item> */}
             </div>
 
             <div style={{ display: 'flex', gap: 5, marginTop: 35, marginBottom: 20 }}>
@@ -366,6 +367,8 @@ const OnlineBooking = () => {
                                 </Button>
                             </Form.Item>
                         }
+
+                        <Button type="primary" onClick={() => form.submit()} style={{ marginLeft: '70%', backgroundColor: 'rgb(206, 85, 36)', color: '#ffffff', border: 'none', marginTop: 20 }}>Submit</Button>
                     </div>
                 )}
             </Form.List>
