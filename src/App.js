@@ -65,9 +65,9 @@ function App() {
               {isAuthenticated && <AppRoutes />}
             </div>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>
+          {/* <Footer style={{ textAlign: 'center' }}>
             AP Temples ©2024 Created by YourName
-          </Footer>
+          </Footer> */}
         </Layout>
       </Router>
     </ConfigProvider>
