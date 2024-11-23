@@ -14,6 +14,7 @@ const OnlineBooking = () => {
     const booking = useSelector((state) => state.booking);
     const [isAccommodation, setIsAccommodation] = useState(true);
     const [selectedTemple, setSelectedTemple] = useState(null);
+    const [fromDate, setFromDate] = useState(null);
     const dispatch = new useDispatch();
     const temples = [
         {
@@ -99,6 +100,12 @@ const OnlineBooking = () => {
         );
     }
 
+
+    const handleFromDateChange = (date) => {
+        form.resetFields(['accommodationDate']);
+        setFromDate(date);
+    };
+
     const dateRender = (current) => {
         // Change the color of weekends to red
         const isWeekend = current.day() === 0 || current.day() === 6;
@@ -140,6 +147,15 @@ const OnlineBooking = () => {
         return templeDates.includes(current.format('YYYY-MM-DD')) || isWeekend || isMonday || isFriday;
     }
 
+    const disableAccomodationDate = (current) => {
+        if (!fromDate) {
+            return true; // Disable all dates if no "From Date" is selected
+        }
+        
+        const convertedDate = moment(fromDate.toString()).local().format('DD-MMM-YYYY'); // Convert date to local format
+        const oneDayBefore = moment(convertedDate).subtract(1, "day").local(); // Calculate one day before "From Date"
+        return !current || !current.isSame(oneDayBefore, "day"); // Enable only the calculated date
+    }
 
     return (<>
         <Title level={4}>VIP Darshanam</Title>
@@ -200,6 +216,7 @@ const OnlineBooking = () => {
                             `}</style>
                         )}
                         disabled={selectedTemple === null}
+                        onChange={handleFromDateChange}
                     />
                 </Form.Item>
 
@@ -210,12 +227,13 @@ const OnlineBooking = () => {
                     <Select
                         style={{ width: 250 }}
                         onChange={(value) => setIsAccommodation(value === 'Y' ? true : false)}
-                        disabled={selectedTemple === null}
+                        //disabled={selectedTemple === null}
                     >
                         <Option value="Y">Yes</Option>
                         <Option value="N">No</Option>
                     </Select>
                 </Form.Item>
+                {/* {moment(fromDate.toString()).local().format('DD-MMM-YYYY')} */}
                 {isAccommodation &&
                     <Form.Item
                         name="accommodationDate"
@@ -224,10 +242,11 @@ const OnlineBooking = () => {
                     >
                         <DatePicker
                             style={{ width: 250 }}
-                            disabledDate={disabledDate}
+                            disabledDate={disableAccomodationDate}
                             //dateRender={dateRender}
                             format='DD-MMM-YYYY'
-                            disabled={selectedTemple === null}
+                           // disabled={selectedTemple === null}
+                            disabled={!form.getFieldValue('darshanamDate')}
                         />
                     </Form.Item>
                 }

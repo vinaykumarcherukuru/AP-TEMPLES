@@ -7,11 +7,13 @@ import Login from '../pages/Login'
 import { useSelector } from 'react-redux'
 import BookingHistory from '../pages/BookingHistory'
 import NotFound from '../pages/NotFound'
+import Dashboard from '../pages/Dashboard'
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route exact path='/' element={<Temples />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route exact path='/login' element={<Login />} />
       <Route exact path='/onlinebooking' element={<OnlineBooking />} />
       <Route exact path='/history' element={<BookingHistory />} />

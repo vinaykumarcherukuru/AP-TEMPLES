@@ -50,9 +50,10 @@ function App() {
           >
             {isAuthenticated &&
               <Menu mode="horizontal" defaultSelectedKeys={['1']} style={{ paddingLeft: 40 }}>
-                {role !== 'eo' && <Menu.Item key="1"><Link to="/">Temples</Link></Menu.Item>}
-                {role !== 'eo' && <Menu.Item key="2"><Link to="/onlinebooking">VIP Darshanam</Link></Menu.Item>}
-                {role === 'eo' && <Menu.Item key="3"><Link to="/history">Booking History</Link></Menu.Item>}
+              {/* {role !== 'eo' && <Menu.Item key="2"><Link to="/dashboard">Dashboard</Link></Menu.Item>} */}
+                {role !== 'eo' && <Menu.Item key="1"><Link to="/">Home</Link></Menu.Item>}
+                <Menu.Item key="3"><Link to="/onlinebooking">VIP Darshanam</Link></Menu.Item>
+                <Menu.Item key="4"><Link to="/history">Booking History</Link></Menu.Item>
                 {/* <Menu.Item key="4"><Link to="/services">Services</Link></Menu.Item>
               <Menu.Item key="5"><Link to="/contact">Contact</Link></Menu.Item> */}
               </Menu>
@@ -65,9 +66,6 @@ function App() {
               {isAuthenticated && <AppRoutes />}
             </div>
           </Content>
-          {/* <Footer style={{ textAlign: 'center' }}>
-            AP Temples ©2024 Created by YourName
-          </Footer> */}
         </Layout>
       </Router>
     </ConfigProvider>
