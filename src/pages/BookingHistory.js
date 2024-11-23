@@ -1,5 +1,5 @@
-import { CheckOutlined, CloseOutlined, EditOutlined, EyeOutlined, MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Flex, Form, Input, Modal, notification, Popconfirm, Select, Space, Table, Tag, Tooltip, Typography } from 'antd'
+import { CheckOutlined, CloseOutlined, EditOutlined, EyeOutlined, MinusCircleOutlined, PlusCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Button, Flex, Form, Input, Modal, notification, Popconfirm, Select, Space, Table, Tag, Tooltip, Typography } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,7 +28,7 @@ const BookingHistory = () => {
         }
     }, [bookingHistory])
 
-    const openModal = async(uuid) => {
+    const openModal = async (uuid) => {
         setRowIndex(uuid);
         setIsOpen(true);
     }
@@ -86,6 +86,24 @@ const BookingHistory = () => {
             </>
             )
         },
+        {
+            title: 'Piligrim Name',
+            dataIndex: 'piligrimName',
+            key: 'piligrimName ',
+            render: (text, record, index) => (<div style={{ marginLeft: 30 }} >
+                {record?.members[0].name}
+            </div>
+            )
+        },
+        {
+            title: 'Piligrim Count',
+            dataIndex: 'piligrim',
+            key: 'piligrim ',
+            render: (text, record, index) => (<div style={{ marginLeft: 30 }} >
+                {record?.members?.length > 0 && <Badge size="default" count={record?.members?.length} />}
+            </div>
+            )
+        },
         // {
         //     title: 'Status',
         //     dataIndex: 'status',
@@ -122,7 +140,7 @@ const BookingHistory = () => {
         }
     ]
 
-    const [form] = Form.useForm();     
+    const [form] = Form.useForm();
 
     const handleTableChange = (newPagination) => {
         setPagination({

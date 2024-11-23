@@ -151,10 +151,13 @@ const OnlineBooking = () => {
         if (!fromDate) {
             return true; // Disable all dates if no "From Date" is selected
         }
-        
-        const convertedDate = moment(fromDate.toString()).local().format('DD-MMM-YYYY'); // Convert date to local format
-        const oneDayBefore = moment(convertedDate).subtract(1, "day").local(); // Calculate one day before "From Date"
-        return !current || !current.isSame(oneDayBefore, "day"); // Enable only the calculated date
+
+        const darshanDate = moment(fromDate.toString()).local().format('DD-MMM-YYYY'); // Convert date to local format
+        const oneDayBefore = moment(darshanDate).subtract(1, "day").local(); // Calculate one day before "From Date"
+        // return !current || !current.isSame(oneDayBefore, "day"); // Enable only the calculated date
+
+        // Enable only "fromDate" and "oneDayBefore"
+        return !current || (!current.isSame(darshanDate, "day") && !current.isSame(oneDayBefore, "day"));
     }
 
     return (<>
@@ -227,7 +230,7 @@ const OnlineBooking = () => {
                     <Select
                         style={{ width: 250 }}
                         onChange={(value) => setIsAccommodation(value === 'Y' ? true : false)}
-                        //disabled={selectedTemple === null}
+                    //disabled={selectedTemple === null}
                     >
                         <Option value="Y">Yes</Option>
                         <Option value="N">No</Option>
@@ -245,7 +248,7 @@ const OnlineBooking = () => {
                             disabledDate={disableAccomodationDate}
                             //dateRender={dateRender}
                             format='DD-MMM-YYYY'
-                           // disabled={selectedTemple === null}
+                            // disabled={selectedTemple === null}
                             disabled={!form.getFieldValue('darshanamDate')}
                         />
                     </Form.Item>
