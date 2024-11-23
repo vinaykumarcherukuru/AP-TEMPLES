@@ -36,8 +36,13 @@ const BookingHistory = () => {
     const columns = [
         {
             title: 'VIP Name',
-            dataIndex: 'candidateName',
-            key: 'candidateName'
+            dataIndex: 'role',
+            key: 'role',
+            render: (text, record) => (
+                <>
+                    {`${record?.candidateName} - (${record?.role?.toUpperCase()})`}
+                </>
+            )
         },
         // {
         //     title: 'Party name',
