@@ -263,9 +263,9 @@ const OnlineBooking = () => {
                 <div>
                     <strong>Piligrim Details</strong>
                 </div>
-                <div style={{ color: 'gray' }}>
+                {/* <div style={{ color: 'gray' }}>
                     {`(You can add up to 5 members)`}
-                </div>
+                </div> */}
             </div>
 
             {/* Member details */}
@@ -376,7 +376,7 @@ const OnlineBooking = () => {
                                 }
                             </Space>
                         ))}
-                        {fields.length < 5 &&
+                        {/* {fields.length < 5 && */}
                             <Form.Item style={{ textAlign: 'center', width: '65%' }}>
                                 <Button
                                     type="link"
@@ -388,7 +388,7 @@ const OnlineBooking = () => {
                                     Add Piligrim
                                 </Button>
                             </Form.Item>
-                        }
+                        {/* } */}
 
                         <Button type="primary" onClick={() => form.submit()} style={{ marginLeft: '70%', backgroundColor: 'rgb(206, 85, 36)', color: '#ffffff', border: 'none', marginTop: 20 }}>Submit</Button>
                     </div>

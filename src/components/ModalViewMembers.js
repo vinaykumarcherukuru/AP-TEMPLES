@@ -47,9 +47,9 @@ export const ModalViewMembers = ({ rowIndex, isOpen, setIsOpen }) => {
                     <div>
                         <strong>Piligrim Details</strong>
                     </div>
-                    <div style={{ color: 'gray' }}>
+                    {/* <div style={{ color: 'gray' }}>
                         <Text>{`(You can add up to 5 members)`}</Text>
-                    </div>
+                    </div> */}
                 </div>
             }
             //centered
@@ -187,7 +187,7 @@ export const ModalViewMembers = ({ rowIndex, isOpen, setIsOpen }) => {
                                     }
                                 </Space>
                             ))}
-                            {fields.length < 5 &&
+                            {/* {fields.length < 5 && */}
                                 <Form.Item style={{ textAlign: 'center', width: '65%' }}>
                                     <Button
                                         type="link"
@@ -199,7 +199,7 @@ export const ModalViewMembers = ({ rowIndex, isOpen, setIsOpen }) => {
                                         Add Piligrim
                                     </Button>
                                 </Form.Item>
-                            }
+                            {/* } */}
                         </div>
                     )}
                 </Form.List>
