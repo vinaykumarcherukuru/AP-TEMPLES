@@ -219,7 +219,7 @@ const BookingHistory = () => {
         XLSX.writeFile(wb, filename);
     };*/
 
-    const exportToExcel = () => {
+    const exportToExcel_bak = () => {
         const excelData = [];
         const boldStyle = { font: { bold: true } }; // Define bold style
     
@@ -255,6 +255,76 @@ const BookingHistory = () => {
                 item.members.forEach(member => {
                     excelData.push([member.name, member.age, member.gender, member.mobile]);
                 });
+            }
+        });
+    
+        // Create a new Excel sheet and add the data
+        const ws = XLSX.utils.aoa_to_sheet(excelData);
+    
+        // Create a new workbook
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'BookingHistory');
+    
+        // Save the Excel file
+        XLSX.writeFile(wb, 'BookingHistory.xlsx');
+    };
+
+    const exportToExcel = () => {
+        const excelData = [];
+    
+        // Add header row
+        excelData.push([
+            'Constituency',
+            'Temple',
+            'DarshanamDate',
+            'Accommodation',
+            'AccommodationDate',
+            'PiligrimName',
+            'Age',
+            'Gender',
+            'Mobile',
+            'Aadhar',
+        ]);
+    
+        // Iterate over the booking history data
+        bookingHistory.forEach((item, index) => {
+            // Add an empty row before each record except the first
+            if (index > 0) {
+                excelData.push([]);
+            }
+    
+            const commonDetails = [
+                item.constituency,
+                item.temple,
+                moment(item.darshanamDate.toString()).local().format('DD-MMM-YYYY'),
+                item.isAccommodation ? 'YES' : 'NO',
+                item.accommodationDate
+                    ? moment(item.accommodationDate.toString()).local().format('DD-MMM-YYYY')
+                    : '',
+            ];
+    
+            if (item.members && item.members.length > 0) {
+                // Add a row for each member
+                item.members.forEach((member) => {
+                    excelData.push([
+                        ...commonDetails,
+                        member.name,
+                        member.age,
+                        member.gender,
+                        member.mobile,
+                        member.aadhar || '', // Include Aadhar if available
+                    ]);
+                });
+            } else {
+                // If no members, add a single row with placeholders for member details
+                excelData.push([
+                    ...commonDetails,
+                    '', // PiligrimName
+                    '', // Age
+                    '', // Gender
+                    '', // Mobile
+                    '', // Aadhar
+                ]);
             }
         });
     

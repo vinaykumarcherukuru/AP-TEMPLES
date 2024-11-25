@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Flex, Form, Image, Input, notification, Typography } from 'antd';
+import { Button, Flex, Form, Image, Input, notification, Space, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../redux/actions/authActions';
 import { useNavigate } from 'react-router-dom';
@@ -43,8 +43,8 @@ const Login = () => {
         <>
             <Title level={2} style={{ textAlign: 'center' }}> Government of Andhra Pradesh - Endowment Department</Title>
 
-            <Flex justify='space-between' wrap style={{ marginTop: 50 }}>
-                <div>
+            <Flex justify='space-between' wrap style={{ marginTop: 50, width:'100%'}}>
+                <Flex gap={50}>
                     <div style={{ textAlign: 'center' }}>
                         <Image
                             width={350}
@@ -59,28 +59,28 @@ const Login = () => {
                         <Title level={4} style={{ margin: 5 }}>Sri Nara Chandrababu Naidu</Title>
                         <Text>Hon’ble Chief Minister of Andhra Pradesh</Text>
                     </div>
-                </div>
-                <div>
-                    <div style={{ textAlign: 'center', position:'relative' }}>
-                        <Image
-                            width={390}
-                            height={375}
-                            src='https://i.imghippo.com/files/prc3955Az.png'
-                            style={{
-                                borderRadius: '8px',
-                                objectFit: 'cover',
-                                objectPosition: 'center center', // Adjust the focus
-                                transform: 'scale(0.87)' // Slight zoom out 
-                            }}
-                            preview={false}
-                        />
-                        <div style={{bottom:-35,left:45, position:'absolute'}}>
+
+
+                    <div style={{ textAlign: 'center', position: 'relative' }}>
+                        <div>
+                            <Image
+                                width={350}
+                                height={350}
+                                src='https://i.imghippo.com/files/zdWx5041Avs.jpg'
+                                style={{
+                                    borderRadius: '8px',
+                                    objectFit: 'cover'
+                                }}
+                                preview={false}
+                            />
+
                             <Title level={4} style={{ margin: 5 }}>Sri Anam Ramanarayana Reddy</Title>
                             <Text>Hon'ble Minister for Endowments</Text>
+
                         </div>
                     </div>
-                </div>
-                <div style={{ width: '30%', marginTop: '3%', marginRight: '5%' }}>
+                </Flex>
+                <div style={{ marginTop: '3%', marginRight:'10%'}}>
                     <Title level={4} style={{ marginLeft: '50%', marginBottom: 20, fontWeight: 600 }}>Sign In</Title>
                     <Form
                         name="basic"
@@ -108,7 +108,7 @@ const Login = () => {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input style={{width:300}} />
                         </Form.Item>
 
                         <Form.Item
@@ -121,7 +121,7 @@ const Login = () => {
                                 },
                             ]}
                         >
-                            <Input.Password />
+                            <Input.Password style={{width:300}} />
                         </Form.Item>
 
                         <Form.Item
@@ -141,7 +141,7 @@ const Login = () => {
                                 span: 16,
                             }}
                         >
-                            <Button type="primary" htmlType="submit" style={{backgroundColor: 'rgb(206, 85, 36)'}}>
+                            <Button type="primary" htmlType="submit" style={{ backgroundColor: 'rgb(206, 85, 36)' }}>
                                 Submit
                             </Button>
                         </Form.Item>

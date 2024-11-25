@@ -10,7 +10,7 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 
 const OnlineBooking = () => {
-    const { candidateName, party, constituency, role } = useSelector((state) => state.auth);
+    const { candidateName, party, constituency, role, uid } = useSelector((state) => state.auth);
     const booking = useSelector((state) => state.booking);
     const [isAccommodation, setIsAccommodation] = useState(true);
     const [selectedTemple, setSelectedTemple] = useState(null);
@@ -82,7 +82,8 @@ const OnlineBooking = () => {
         data.party = party;
         data.constituency = constituency;
         data.role = role;
-        data.bookingDate = moment().format("DD-MM-YYYY hh:mm:ss A")
+        data.bookingDate = moment().format("DD-MM-YYYY hh:mm:ss A");
+        data.userId = uid;
 
         dispatch(BookingDetails.AddDetails(data)).then(() => {
             notification.success({
@@ -133,7 +134,7 @@ const OnlineBooking = () => {
     const disabledDate = (current) => {
         // Get the dates to disable based on the selected temple
         const templeDates = booking
-            .filter(x => x.temple === selectedTemple)
+            .filter(x => x.temple === selectedTemple && x.userId === uid)
             .map(x => x.darshanamDate?.format('YYYY-MM-DD'));
 
         // Disable weekends (Saturday and Sunday)
@@ -163,7 +164,7 @@ const OnlineBooking = () => {
     return (<>
         <Title level={4}>VIP Darshanam</Title>
         <br />
-
+        
         <Form
             layout="vertical"
             name="bookingForm"
