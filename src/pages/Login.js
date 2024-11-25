@@ -44,7 +44,7 @@ const Login = () => {
             <Title level={2} style={{ textAlign: 'center' }}> Government of Andhra Pradesh - Endowment Department</Title>
 
             <Flex justify='space-between' wrap style={{ marginTop: 50, width:'100%'}}>
-                <Flex gap={50}>
+                <Flex gap={50} wrap='wrap'>
                     <div style={{ textAlign: 'center' }}>
                         <Image
                             width={350}
